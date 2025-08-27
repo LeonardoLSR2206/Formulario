@@ -29,6 +29,10 @@
         .borda-erro{
             border: 2px solid red;
         }
+
+        #radio-container{
+            display: flex;
+        }
     </style>
 </head>
 <body>
@@ -44,6 +48,41 @@
             <input type="email" name="email" id="email"
                 placeholder="email@exemplo.com" required maxlength="30">
         </div>
+
+        <div>
+            <label for="birthday">Dia de nascimento</label>
+            <input type="date" name="birthday" id="birthday">
+        </div>
+
+        <div>
+            <label for="turma">Turma</label>
+            <select name="turma" id="turma">
+                <option value="" selected>Selecione uma turma</option>
+                <option value="turma01">Turma 1</option>
+                <option value="turma02">Turma 2</option>
+                <option value="turma03">Turma 3</option>
+                <option value="turma04">Turma 4</option>
+                <option value="turma05">Turma 5</option>
+                <option value="turma06">Turma 6</option>
+                <option value="turma07">Turma 7</option>
+                <option value="turma08">Turma 8</option>
+            </select>
+        </div>
+
+         <div id="radio-container">
+                    <input type="radio" name="sexo" id="masculino" value="m">
+                    <label id="radio-label" for="masculino">Masculino</label>
+        </div>
+
+        <div id="radio-container">
+                    <input type="radio" name="sexo" id="feminino" value="f">
+                    <label id="radio-label" for="feminino">Feminino</label>
+        </div>
+
+        <div id="radio-container">
+                    <input type="radio" name="sexo" id="outro" value="o">
+                    <label id="radio-label" for="outro">Outro</label>
+         </div>
 
         <div>
             <label for="password">Senha</label>
@@ -65,13 +104,54 @@
     </form>
     
     <script>
+
+        let inputNome = document.getElementById('user-name');
+        let inputEmail = document.getElementById('email');
+
+        inputNome.addEventListener('input', function(){
+            (this).classList.remove('borda-erro');
+        })
+
+        inputEmail.addEventListener('input', function(){
+            inputEmail.classList.remove('borda-erro');
+        })
+
+        inputNome.addEventListener('blur', function(){
+            if(inputNome.value.length < 2){
+                inputNome.classList.add('borda-erro');
+            }
+        })
+
         function enviarForm(){
 
             let nome = document.getElementById('user-name').value;
             let email = document.getElementById('email').value;
+            let dataNascimento = document.getElementById('birthday').value;
+            let turma = document.getElementById('turma').value;
             let senha = document.getElementById('password').value;
             let confirmarSenha = document.getElementById('confirm-password').value;
 
+            let radios = document.getElementsByName('sexo');
+            let sexo = null;
+
+            for(let i = 0; i < radios.length; i++){
+                if(radios[i].checked){
+                    sexo = radios[i].value;
+                    break;
+                }
+            }
+
+            alert(sexo)
+
+            if(!maiorDeIdade(dataNascimento)){
+                document.getElementById('birthday').classList.add('borda-erro');
+            }
+            if(nome.length < 2){
+                document.getElementById('user-name').classList.add('borda-erro');
+            }
+            if(email.length === 0){
+                document.getElementById('email').classList.add('borda-erro');
+            }
             if(senha.length === 0){
                 document.getElementById('password').classList.add('borda-erro');
             }
@@ -84,7 +164,22 @@
             // } else {
             //     alert("Cadástro enviado com sucesso!")
             // }
+        }
+        
+        function maiorDeIdade(data){
+            if(!data) return false;
 
+            let hoje = new Date();
+            let nascimento = new Date(data);
+
+            let idade = hoje.getFullYear() - nascimento.getFullYear();
+            let mes = hoje.getMonth() - nascimento.getMonth()
+
+            if(mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())){
+                idade--;
+            }
+
+            return idade >= 18;
         }
     </script>
 </body>
